@@ -1,0 +1,41 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Donation {
+  id                  String   @id @default(uuid())
+  donor_name          String
+  donor_email         String
+  donor_phone         String
+  amount              Float
+  initiative          String
+  payment_method      String
+  razorpay_order_id   String?
+  razorpay_payment_id String?   @unique
+  razorpay_signature  String?
+  status              String   // "pending", "success", "failed"
+  receipt_sent        Boolean  @default(false)
+  created_at          DateTime @default(now())
+
+  @@map("donations")
+}
+
+model Volunteer {
+  id           String   @id @default(uuid())
+  name         String
+  email        String
+  phone        String
+  city         String
+  skills       String[]
+  availability String   // "weekly", "bi-weekly", "monthly"
+  interests    String[]
+  created_at   DateTime @default(now())
+
+  @@map("volunteers")
+}
