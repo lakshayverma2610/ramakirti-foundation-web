@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   description: 'See the most urgent requirements of the foundation and support us by donating these items directly.',
 };
 
+export const dynamic = 'force-dynamic';
+
 const NEEDS = [
   {
     category: "Education & Stationery",

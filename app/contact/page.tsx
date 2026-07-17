@@ -129,6 +129,7 @@ export default function ContactPage() {
                     <input type="tel" placeholder="Phone (optional)" value={form.phone} onChange={(e) => update('phone', e.target.value)}
                       className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-[16px] font-[family-name:var(--font-plus-jakarta)] focus:outline-none focus:border-[#651A16]" />
                     <select value={form.subject} onChange={(e) => update('subject', e.target.value)}
+                      required
                       className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-[16px] font-[family-name:var(--font-plus-jakarta)] focus:outline-none focus:border-[#651A16] bg-white">
                       <option value="">Subject</option>
                       <option value="General Enquiry">General Enquiry</option>

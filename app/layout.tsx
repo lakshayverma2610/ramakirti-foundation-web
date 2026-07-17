@@ -2,8 +2,6 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { Roboto, Plus_Jakarta_Sans } from 'next/font/google';
 import Script from 'next/script';
-import Navigation from './components/Navigation';
-import Footer from './components/Footer';
 
 const roboto = Roboto({
   subsets: ['latin'],
@@ -113,11 +111,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body suppressHydrationWarning={true} className={`${plusJakarta.variable} font-sans antialiased text-[17px]`}>
-        <Navigation />
         <main className="min-h-screen">
           {children}
         </main>
-        <Footer />
         <a 
           href="https://wa.me/918851502840?text=Hi,%20I%20want%20to%20know%20more%20about%20volunteering/donating"
           target="_blank"

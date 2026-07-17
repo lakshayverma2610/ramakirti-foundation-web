@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Navigation from '@/app/components/Navigation';
 import Footer from '@/app/components/Footer';
+import VolunteerForm from '@/app/components/VolunteerForm';
 
 export const metadata: Metadata = {
   title: 'Volunteers | Ramakirti Foundation',
@@ -97,22 +98,8 @@ export default function VolunteerPage() {
               ))}
             </div>
 
-            <div className="mt-20 text-center">
-              <div className="bg-white rounded-2xl p-12 shadow-md border border-[#e5e7eb] max-w-3xl mx-auto">
-                <div className="text-5xl mb-6">🤝</div>
-                <h3 className="font-extrabold text-[28px] text-[#6E1110] font-[family-name:var(--font-plus-jakarta)] mb-4">
-                  Become a Volunteer
-                </h3>
-                <p className="text-gray-600 text-[16px] mb-8 leading-relaxed max-w-xl mx-auto">
-                  Do you want to dedicate your time, resources, and skills to reach out to women and children in need? Join our team of dedicated volunteers today.
-                </p>
-                <Link
-                  href="/contact"
-                  className="hero-btn-primary inline-flex items-center gap-2 font-[family-name:var(--font-plus-jakarta)] font-bold text-[16px] text-white px-8 py-4 rounded-lg shadow-md no-underline"
-                >
-                  Join Our Mission
-                </Link>
-              </div>
+            <div className="mt-20">
+              <VolunteerForm />
             </div>
 
           </div>

@@ -31,14 +31,7 @@ function getCollaborator(name: string) {
 
 interface PageProps { params: { slug: string } }
 
-export async function generateStaticParams() {
-  try {
-    const initiatives = await db.initiative.findMany({ select: { id: true } });
-    return initiatives.map((initiative) => ({ slug: initiative.id }));
-  } catch {
-    return [];
-  }
-}
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: PageProps) {
   const id = params.slug;
