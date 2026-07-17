@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 
 export default function AdminDashboard({ messages, initiatives }: { messages: any[], initiatives: any[] }) {
   const [activeTab, setActiveTab] = useState<'messages' | 'initiatives'>('messages');
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const router = useRouter();
 
   async function handleToggleTestimonial(id: string, currentStatus: boolean) {
@@ -18,17 +19,6 @@ export default function AdminDashboard({ messages, initiatives }: { messages: an
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
-      <nav className="bg-white shadow-sm border-b border-gray-200 p-4 flex justify-between items-center">
-        <h1 className="text-xl font-bold text-[#6E1110]">Ramakirti Foundation Admin</h1>
-        <button 
-          onClick={() => logoutAction()}
-          className="text-gray-500 hover:text-gray-800 text-sm font-semibold px-4 py-2 border rounded-md"
-        >
-          Logout
-        </button>
-      </nav>
-
       <div className="max-w-6xl mx-auto p-6 mt-6">
         <div className="flex gap-4 mb-8">
           <button
@@ -99,11 +89,14 @@ export default function AdminDashboard({ messages, initiatives }: { messages: an
             <div className="p-6 grid lg:grid-cols-2 gap-10 items-start">
               <div>
                 <h2 className="text-2xl font-bold mb-6">Add New Initiative</h2>
-                <form 
+                <form
                   action={async (formData) => {
                     await createInitiativeAction(formData);
+                    setImagePreview(null);
+                    (document.getElementById('initiative-form') as HTMLFormElement)?.reset();
                     router.refresh();
                   }}
+                  id="initiative-form"
                   className="space-y-5"
                 >
                   <div>
@@ -111,8 +104,29 @@ export default function AdminDashboard({ messages, initiatives }: { messages: an
                     <input type="text" name="title" required className="w-full border rounded-lg p-3 outline-none focus:border-[#6E1110] focus:ring-1 focus:ring-[#6E1110]" />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold mb-2 text-gray-700">Image URL</label>
-                    <input type="url" name="image_url" required placeholder="https://..." className="w-full border rounded-lg p-3 outline-none focus:border-[#6E1110] focus:ring-1 focus:ring-[#6E1110]" />
+                    <label className="block text-sm font-semibold mb-2 text-gray-700">Image Upload</label>
+                    <input 
+                      type="file" 
+                      name="image" 
+                      accept="image/*" 
+                      required 
+                      className="w-full border rounded-lg p-3 outline-none focus:border-[#6E1110] focus:ring-1 focus:ring-[#6E1110]"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onloadend = () => setImagePreview(reader.result as string);
+                          reader.readAsDataURL(file);
+                        } else {
+                          setImagePreview(null);
+                        }
+                      }}
+                    />
+                    {imagePreview && (
+                      <div className="mt-3">
+                        <img src={imagePreview} alt="Preview" className="w-32 h-32 object-cover rounded-lg border border-gray-200" />
+                      </div>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-semibold mb-2 text-gray-700">Description</label>
@@ -130,7 +144,14 @@ export default function AdminDashboard({ messages, initiatives }: { messages: an
                   <div className="space-y-4">
                     {initiatives.map(init => (
                       <div key={init.id} className="flex gap-4 p-4 border rounded-xl hover:shadow-md transition-shadow bg-gray-50">
-                        {init.image_url && <img src={init.image_url} alt="" className="w-24 h-24 object-cover rounded-lg flex-shrink-0" />}
+                        {init.image_url && (
+                          <img 
+                            src={init.image_url} 
+                            alt="" 
+                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                            className="w-24 h-24 object-cover rounded-lg flex-shrink-0" 
+                          />
+                        )}
                         <div className="flex-1 min-w-0">
                           <h3 className="font-bold text-gray-800 text-lg truncate">{init.title}</h3>
                           <p className="text-sm text-gray-600 line-clamp-2 mt-1">{init.description}</p>
@@ -153,6 +174,5 @@ export default function AdminDashboard({ messages, initiatives }: { messages: an
           )}
         </div>
       </div>
-    </div>
   );
 }

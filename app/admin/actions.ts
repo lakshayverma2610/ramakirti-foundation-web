@@ -36,17 +36,21 @@ export async function removeTestimonialAction(id: string) {
 export async function createInitiativeAction(formData: FormData) {
   const title = formData.get('title') as string;
   const description = formData.get('description') as string;
-  const image_url = formData.get('image_url') as string;
+  const image = formData.get('image') as File;
   
-  if (!title || !description || !image_url) {
+  if (!title || !description || !image) {
     throw new Error('Missing fields');
   }
+
+  const arrayBuffer = await image.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+  const base64 = `data:${image.type};base64,${buffer.toString('base64')}`;
 
   await db.initiative.create({
     data: {
       title,
       description,
-      image_url
+      image_url: base64
     }
   });
 }
