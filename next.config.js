@@ -7,6 +7,11 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '50mb'
+    }
+  },
 
   // Image optimization
   images: {

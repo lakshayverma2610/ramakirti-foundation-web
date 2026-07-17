@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Navigation from '@/app/components/Navigation';
 import Footer from '@/app/components/Footer';
+import InitiativeGallery from '@/app/components/InitiativeGallery';
 import { db } from '@/lib/db';
 
 /* ─── Collaborator map ─── */
@@ -83,12 +84,23 @@ export default async function InitiativeDetailPage({ params }: PageProps) {
           style={{ minHeight: '540px', paddingTop: '72px' }}
         >
           {coverImage ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={coverImage}
-              alt={displayName}
-              className="absolute inset-0 w-full h-full object-cover"
-            />
+            <div className="absolute inset-0 w-full h-full overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={coverImage}
+                alt={displayName}
+                className="w-full h-full object-cover"
+                style={{
+                  animation: 'slowZoom 20s ease-out forwards',
+                }}
+              />
+              <style>{`
+                @keyframes slowZoom {
+                  0% { transform: scale(1); }
+                  100% { transform: scale(1.15); }
+                }
+              `}</style>
+            </div>
           ) : (
             <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg,#3A0D0B,#6E1110)' }} />
           )}
@@ -191,47 +203,8 @@ export default async function InitiativeDetailPage({ params }: PageProps) {
           </div>
         </section>
 
-        {/* Gallery */}
-        {galleryImages.length > 0 && (
-          <section className="py-16" style={{ background: '#fff' }}>
-            <div className="max-w-[1280px] mx-auto px-5">
-              <div className="text-center mb-12">
-                <span
-                  className="font-bold text-sm uppercase tracking-[.15em] mb-3 block"
-                  style={{ color: '#C9A84C', fontFamily: 'var(--font-plus-jakarta, sans-serif)' }}
-                >
-                  Photo Gallery
-                </span>
-                <h2
-                  className="font-extrabold"
-                  style={{ color: '#6E1110', fontSize: 'clamp(24px,4vw,40px)', fontFamily: 'var(--font-plus-jakarta, sans-serif)' }}
-                >
-                  Moments From the Event
-                </h2>
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-                {galleryImages.map((imgSrc, idx) => (
-                  <div
-                    key={idx}
-                    className="gallery-thumb relative overflow-hidden rounded-xl bg-gray-100"
-                    style={{ aspectRatio: '1/1' }}
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={imgSrc}
-                      alt={`${displayName} — photo ${idx + 1}`}
-                      className="gallery-img w-full h-full object-cover"
-                      loading="lazy"
-                    />
-                    <div className="gallery-overlay absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(110,17,16,.5)' }}>
-                      <span className="text-white text-3xl">🔍</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
+        {/* Interactive Gallery */}
+        <InitiativeGallery mediaUrls={galleryImages} />
       </main>
       <Footer />
     </>

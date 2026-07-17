@@ -104,7 +104,7 @@ export default function AdminDashboard({ messages, initiatives }: { messages: an
                     <input type="text" name="title" required className="w-full border rounded-lg p-3 outline-none focus:border-[#6E1110] focus:ring-1 focus:ring-[#6E1110]" />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold mb-2 text-gray-700">Image Upload</label>
+                    <label className="block text-sm font-semibold mb-2 text-gray-700">Cover Image</label>
                     <input 
                       type="file" 
                       name="image" 
@@ -127,6 +127,17 @@ export default function AdminDashboard({ messages, initiatives }: { messages: an
                         <img src={imagePreview} alt="Preview" className="w-32 h-32 object-cover rounded-lg border border-gray-200" />
                       </div>
                     )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold mb-2 text-gray-700">Gallery Media (Optional)</label>
+                    <input 
+                      type="file" 
+                      name="gallery" 
+                      accept="image/*,video/*" 
+                      multiple 
+                      className="w-full border rounded-lg p-3 outline-none focus:border-[#6E1110] focus:ring-1 focus:ring-[#6E1110] text-sm"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Upload multiple photos or videos to showcase in the gallery.</p>
                   </div>
                   <div>
                     <label className="block text-sm font-semibold mb-2 text-gray-700">Description</label>

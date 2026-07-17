@@ -37,6 +37,7 @@ export async function createInitiativeAction(formData: FormData) {
   const title = formData.get('title') as string;
   const description = formData.get('description') as string;
   const image = formData.get('image') as File;
+  const galleryFiles = formData.getAll('gallery') as File[];
   
   if (!title || !description || !image) {
     throw new Error('Missing fields');
@@ -46,11 +47,20 @@ export async function createInitiativeAction(formData: FormData) {
   const buffer = Buffer.from(arrayBuffer);
   const base64 = `data:${image.type};base64,${buffer.toString('base64')}`;
 
+  const gallery_urls: string[] = [];
+  for (const file of galleryFiles) {
+    if (file && file.size > 0) {
+      const gBuffer = Buffer.from(await file.arrayBuffer());
+      gallery_urls.push(`data:${file.type};base64,${gBuffer.toString('base64')}`);
+    }
+  }
+
   await db.initiative.create({
     data: {
       title,
       description,
-      image_url: base64
+      image_url: base64,
+      gallery_urls
     }
   });
 }
