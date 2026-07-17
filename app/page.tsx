@@ -5,7 +5,6 @@ import Navigation from '@/app/components/Navigation';
 import Footer from '@/app/components/Footer';
 import { AnimatedCounter } from '@/app/components/AnimatedCounter';
 import TestimonialCarousel from '@/app/components/TestimonialCarousel';
-import TestimonialForm from '@/app/components/TestimonialForm';
 
 export const metadata: Metadata = {
   title: 'Ramakirti Foundation | Best NGO in Gurgaon',
@@ -186,8 +185,6 @@ export default async function HomePage() {
             <div className="-mx-5 px-5">
               <TestimonialCarousel testimonials={allTestimonials} />
             </div>
-
-            <TestimonialForm />
           </div>
         </section>
 

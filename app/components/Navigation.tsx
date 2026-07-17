@@ -18,6 +18,7 @@ const NAV_LINKS = [
   },
   { href: '/requirements', label: 'Requirements' },
   { href: '/volunteer', label: 'Volunteer' },
+  { href: '/write-testimonial', label: 'Write Testimonial' },
   { href: '/contact', label: 'Contact' },
 ];
 

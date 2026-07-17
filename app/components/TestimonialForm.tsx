@@ -7,7 +7,7 @@ export default function TestimonialForm() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
   return (
-    <div className="mt-20 max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+    <div className="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
       <div className="text-center mb-6">
         <h3 className="text-2xl font-bold text-[#6E1110] font-[family-name:var(--font-plus-jakarta)]">Share Your Experience</h3>
         <p className="text-gray-500 mt-2 text-sm">Have you volunteered, donated, or partnered with us? We'd love to hear your story.</p>
