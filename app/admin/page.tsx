@@ -7,16 +7,22 @@ export const dynamic = 'force-dynamic';
 
 async function DashboardData() {
   const messages = await db.contactMessage.findMany({
-    orderBy: { created_at: 'desc' },
-    select: { id: true, name: true, email: true, message: true, is_testimonial: true }
+    orderBy: { created_at: 'desc' }
   });
 
   const initiatives = await db.initiative.findMany({
-    orderBy: { created_at: 'desc' },
-    select: { id: true, title: true, description: true, image_url: true }
+    orderBy: { created_at: 'desc' }
   });
 
-  return <AdminDashboard messages={messages} initiatives={initiatives} />;
+  const requirements = await db.requirement.findMany({
+    orderBy: { created_at: 'desc' }
+  });
+
+  const volunteers = await db.volunteer.findMany({
+    orderBy: { created_at: 'desc' }
+  });
+
+  return <AdminDashboard messages={messages} initiatives={initiatives} requirements={requirements} volunteers={volunteers} />;
 }
 
 function DashboardSkeleton() {

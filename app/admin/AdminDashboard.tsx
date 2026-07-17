@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { logoutAction, makeTestimonialAction, removeTestimonialAction, createInitiativeAction, deleteInitiativeAction, sendReplyAction } from './actions';
+import { logoutAction, makeTestimonialAction, removeTestimonialAction, createInitiativeAction, deleteInitiativeAction, sendReplyAction, createRequirementAction, updateRequirementAction, deleteRequirementAction, updateVolunteerStatusAction } from './actions';
 import { useRouter } from 'next/navigation';
 
-export default function AdminDashboard({ messages, initiatives }: { messages: any[], initiatives: any[] }) {
-  const [activeTab, setActiveTab] = useState<'messages' | 'testimonials' | 'initiatives'>('messages');
+export default function AdminDashboard({ messages, initiatives, requirements, volunteers }: { messages: any[], initiatives: any[], requirements: any[], volunteers: any[] }) {
+  const [activeTab, setActiveTab] = useState<'messages' | 'testimonials' | 'initiatives' | 'requirements' | 'volunteers'>('messages');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [replyModal, setReplyModal] = useState<{ isOpen: boolean, email: string, name: string, subject: string, status: 'idle' | 'sending' | 'success' | 'error' }>({
     isOpen: false, email: '', name: '', subject: '', status: 'idle'
@@ -38,9 +38,39 @@ export default function AdminDashboard({ messages, initiatives }: { messages: an
     }
   }
 
+  async function handleUpdateRequirement(id: string, fulfilledQuantity: number) {
+    setLoadingId(`req-${id}`);
+    try {
+      await updateRequirementAction(id, fulfilledQuantity);
+      router.refresh();
+    } finally {
+      setLoadingId(null);
+    }
+  }
+
+  async function handleDeleteRequirement(id: string) {
+    setLoadingId(`del-req-${id}`);
+    try {
+      await deleteRequirementAction(id);
+      router.refresh();
+    } finally {
+      setLoadingId(null);
+    }
+  }
+
+  async function handleUpdateVolunteerStatus(id: string, status: string) {
+    setLoadingId(`vol-${id}`);
+    try {
+      await updateVolunteerStatusAction(id, status);
+      router.refresh();
+    } finally {
+      setLoadingId(null);
+    }
+  }
+
   return (
       <div className="max-w-6xl mx-auto p-6 mt-6">
-        <div className="flex gap-4 mb-8">
+        <div className="flex gap-4 mb-8 overflow-x-auto pb-2">
           <button
             onClick={() => setActiveTab('messages')}
             className={`px-6 py-3 rounded-lg font-bold transition-colors ${activeTab === 'messages' ? 'bg-[#6E1110] text-white shadow-md' : 'bg-white text-gray-600 border hover:bg-gray-50'}`}
@@ -55,9 +85,21 @@ export default function AdminDashboard({ messages, initiatives }: { messages: an
           </button>
           <button
             onClick={() => setActiveTab('initiatives')}
-            className={`px-6 py-3 rounded-lg font-bold transition-colors ${activeTab === 'initiatives' ? 'bg-[#6E1110] text-white shadow-md' : 'bg-white text-gray-600 border hover:bg-gray-50'}`}
+            className={`px-6 py-3 rounded-lg font-bold transition-colors whitespace-nowrap ${activeTab === 'initiatives' ? 'bg-[#6E1110] text-white shadow-md' : 'bg-white text-gray-600 border hover:bg-gray-50'}`}
           >
             Manage Initiatives
+          </button>
+          <button
+            onClick={() => setActiveTab('requirements')}
+            className={`px-6 py-3 rounded-lg font-bold transition-colors whitespace-nowrap ${activeTab === 'requirements' ? 'bg-[#6E1110] text-white shadow-md' : 'bg-white text-gray-600 border hover:bg-gray-50'}`}
+          >
+            Manage Requirements
+          </button>
+          <button
+            onClick={() => setActiveTab('volunteers')}
+            className={`px-6 py-3 rounded-lg font-bold transition-colors whitespace-nowrap ${activeTab === 'volunteers' ? 'bg-[#6E1110] text-white shadow-md' : 'bg-white text-gray-600 border hover:bg-gray-50'}`}
+          >
+            Volunteers
           </button>
         </div>
 
@@ -301,6 +343,156 @@ export default function AdminDashboard({ messages, initiatives }: { messages: an
                   </div>
                 )}
               </div>
+            </div>
+          )}
+
+          {activeTab === 'requirements' && (
+            <div className="p-6 grid lg:grid-cols-[1fr_2fr] gap-10 items-start">
+              <div>
+                <h2 className="text-2xl font-bold mb-6">Add Requirement</h2>
+                <form
+                  action={async (formData) => {
+                    setIsPublishing(true);
+                    try {
+                      await createRequirementAction(formData);
+                      (document.getElementById('requirement-form') as HTMLFormElement)?.reset();
+                      router.refresh();
+                    } finally {
+                      setIsPublishing(false);
+                    }
+                  }}
+                  id="requirement-form"
+                  className="space-y-5"
+                >
+                  <div>
+                    <label className="block text-sm font-semibold mb-2 text-gray-700">Item Name</label>
+                    <input type="text" name="itemName" required placeholder="e.g., Notebooks" className="w-full border rounded-lg p-3 outline-none focus:border-[#6E1110] focus:ring-1 focus:ring-[#6E1110]" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold mb-2 text-gray-700">Target Quantity</label>
+                    <input type="number" name="targetQuantity" required min="1" placeholder="e.g., 500" className="w-full border rounded-lg p-3 outline-none focus:border-[#6E1110] focus:ring-1 focus:ring-[#6E1110]" />
+                  </div>
+                  <button type="submit" disabled={isPublishing} className="bg-[#6E1110] text-white font-bold py-3 px-6 rounded-lg hover:bg-[#8B2520] transition-colors w-full disabled:opacity-70">
+                    {isPublishing ? 'Adding...' : 'Add Requirement'}
+                  </button>
+                </form>
+              </div>
+
+              <div>
+                <h2 className="text-2xl font-bold mb-6">Current Requirements</h2>
+                {requirements.length === 0 ? <p className="text-gray-500">No requirements added yet.</p> : (
+                  <div className="space-y-4">
+                    {requirements.map(req => (
+                      <div key={req.id} className="flex flex-col gap-2 p-4 border rounded-xl hover:shadow-md transition-shadow bg-gray-50">
+                        <div className="flex justify-between items-start">
+                          <h3 className="font-bold text-gray-800 text-lg">{req.itemName}</h3>
+                          <button 
+                            onClick={() => handleDeleteRequirement(req.id)}
+                            disabled={loadingId === `del-req-${req.id}`}
+                            className="text-red-500 hover:text-red-700 text-xs font-semibold disabled:opacity-50"
+                          >
+                            {loadingId === `del-req-${req.id}` ? 'Deleting...' : 'Delete'}
+                          </button>
+                        </div>
+                        <div className="flex items-center gap-4 mt-2">
+                          <div className="flex items-center gap-2">
+                            <label className="text-sm text-gray-600 font-semibold">Fulfilled:</label>
+                            <input 
+                              type="number" 
+                              defaultValue={req.fulfilledQuantity}
+                              min="0"
+                              className="border rounded p-1 w-20 text-sm outline-none focus:border-[#6E1110]"
+                              onChange={(e) => handleUpdateRequirement(req.id, parseInt(e.target.value, 10))}
+                            />
+                          </div>
+                          <div className="text-sm text-gray-500 font-semibold">
+                            / {req.targetQuantity} Target
+                          </div>
+                          <div className="flex-1 bg-gray-200 h-2 rounded-full overflow-hidden ml-4">
+                            <div className="bg-[#6E1110] h-full" style={{ width: `${Math.min(100, (req.fulfilledQuantity / req.targetQuantity) * 100)}%` }}></div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'volunteers' && (
+            <div className="p-6">
+              <h2 className="text-2xl font-bold mb-6">Volunteer Submissions</h2>
+              {volunteers.length === 0 ? <p className="text-gray-500">No volunteer applications yet.</p> : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-sm border-collapse">
+                    <thead>
+                      <tr className="bg-gray-50 border-b">
+                        <th className="p-4 font-semibold text-gray-600">Applicant Info</th>
+                        <th className="p-4 font-semibold text-gray-600">Skills / Interests</th>
+                        <th className="p-4 font-semibold text-gray-600 text-right">Status Management</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {volunteers.map(vol => (
+                        <tr key={vol.id} className="border-b last:border-0 hover:bg-gray-50 transition-colors">
+                          <td className="p-4 align-top">
+                            <div className="font-bold text-gray-800 text-base">{vol.name}</div>
+                            <div className="text-xs text-gray-500 mb-1">{vol.email}</div>
+                            <div className="text-xs text-gray-500">Phone: {vol.phone}</div>
+                            <div className="text-xs text-gray-500 mt-2 font-semibold">City: {vol.city}</div>
+                            <div className="text-xs text-gray-500">Availability: {vol.availability}</div>
+                          </td>
+                          <td className="p-4 align-top">
+                            <div className="mb-2">
+                              <span className="font-semibold text-gray-700 text-xs block mb-1">Skills:</span>
+                              <div className="flex flex-wrap gap-1">
+                                {vol.skills.map((skill: string) => (
+                                  <span key={skill} className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-[10px] font-bold uppercase">{skill}</span>
+                                ))}
+                              </div>
+                            </div>
+                            <div>
+                              <span className="font-semibold text-gray-700 text-xs block mb-1">Interests:</span>
+                              <div className="flex flex-wrap gap-1">
+                                {vol.interests.map((interest: string) => (
+                                  <span key={interest} className="bg-purple-50 text-purple-700 px-2 py-1 rounded text-[10px] font-bold uppercase">{interest}</span>
+                                ))}
+                              </div>
+                            </div>
+                          </td>
+                          <td className="p-4 align-top text-right space-y-3">
+                            <div>
+                              <select 
+                                value={vol.status}
+                                onChange={(e) => handleUpdateVolunteerStatus(vol.id, e.target.value)}
+                                disabled={loadingId === `vol-${vol.id}`}
+                                className={`p-2 rounded-lg text-xs font-bold border-2 outline-none w-full cursor-pointer transition-colors ${
+                                  vol.status === 'Onboarded' ? 'bg-green-50 text-green-700 border-green-200' :
+                                  vol.status === 'Contacted' ? 'bg-blue-50 text-blue-700 border-blue-200' :
+                                  'bg-yellow-50 text-yellow-700 border-yellow-200'
+                                }`}
+                              >
+                                <option value="Pending">⏳ Pending</option>
+                                <option value="Contacted">📞 Contacted</option>
+                                <option value="Onboarded">✓ Onboarded</option>
+                              </select>
+                            </div>
+                            <div>
+                              <a 
+                                href={`mailto:${vol.email}?subject=Volunteering at Ramakirti Foundation`}
+                                className="inline-block bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-2 rounded-lg font-semibold text-xs transition-colors whitespace-nowrap w-full text-center"
+                              >
+                                ✉️ Email Volunteer
+                              </a>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           )}
         </div>
