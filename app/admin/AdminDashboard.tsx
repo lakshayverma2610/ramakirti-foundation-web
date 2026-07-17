@@ -10,15 +10,32 @@ export default function AdminDashboard({ messages, initiatives }: { messages: an
   const [replyModal, setReplyModal] = useState<{ isOpen: boolean, email: string, name: string, subject: string, status: 'idle' | 'sending' | 'success' | 'error' }>({
     isOpen: false, email: '', name: '', subject: '', status: 'idle'
   });
+  const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [isPublishing, setIsPublishing] = useState(false);
   const router = useRouter();
 
   async function handleToggleTestimonial(id: string, currentStatus: boolean) {
-    if (currentStatus) {
-      await removeTestimonialAction(id);
-    } else {
-      await makeTestimonialAction(id);
+    setLoadingId(id);
+    try {
+      if (currentStatus) {
+        await removeTestimonialAction(id);
+      } else {
+        await makeTestimonialAction(id);
+      }
+      router.refresh();
+    } finally {
+      setLoadingId(null);
     }
-    router.refresh();
+  }
+
+  async function handleDeleteInitiative(id: string) {
+    setLoadingId(id);
+    try {
+      await deleteInitiativeAction(id);
+      router.refresh();
+    } finally {
+      setLoadingId(null);
+    }
   }
 
   return (
@@ -88,16 +105,18 @@ export default function AdminDashboard({ messages, initiatives }: { messages: an
                               {msg.is_testimonial ? (
                                 <button 
                                   onClick={() => handleToggleTestimonial(msg.id, msg.is_testimonial)}
-                                  className="bg-green-100 text-green-700 hover:bg-green-200 px-4 py-2 rounded-lg font-semibold text-xs transition-colors whitespace-nowrap w-full"
+                                  disabled={loadingId === msg.id}
+                                  className="bg-green-100 text-green-700 hover:bg-green-200 px-4 py-2 rounded-lg font-semibold text-xs transition-colors whitespace-nowrap w-full disabled:opacity-50"
                                 >
-                                  ✓ Testimonial Added
+                                  {loadingId === msg.id ? 'Processing...' : '✓ Testimonial Added'}
                                 </button>
                               ) : (
                                 <button 
                                   onClick={() => handleToggleTestimonial(msg.id, msg.is_testimonial)}
-                                  className="bg-gray-100 text-gray-600 hover:bg-gray-200 px-4 py-2 rounded-lg font-semibold text-xs transition-colors whitespace-nowrap w-full"
+                                  disabled={loadingId === msg.id}
+                                  className="bg-gray-100 text-gray-600 hover:bg-gray-200 px-4 py-2 rounded-lg font-semibold text-xs transition-colors whitespace-nowrap w-full disabled:opacity-50"
                                 >
-                                  + Convert to Testimonial
+                                  {loadingId === msg.id ? 'Processing...' : '+ Convert to Testimonial'}
                                 </button>
                               )}
                             </div>
@@ -158,16 +177,18 @@ export default function AdminDashboard({ messages, initiatives }: { messages: an
                               {msg.is_testimonial ? (
                                 <button 
                                   onClick={() => handleToggleTestimonial(msg.id, true)}
-                                  className="bg-green-100 text-green-700 hover:bg-green-200 px-4 py-2 rounded-lg font-semibold text-xs transition-colors whitespace-nowrap w-full"
+                                  disabled={loadingId === msg.id}
+                                  className="bg-green-100 text-green-700 hover:bg-green-200 px-4 py-2 rounded-lg font-semibold text-xs transition-colors whitespace-nowrap w-full disabled:opacity-50"
                                 >
-                                  ✓ Published (Hide)
+                                  {loadingId === msg.id ? 'Processing...' : '✓ Published (Hide)'}
                                 </button>
                               ) : (
                                 <button 
                                   onClick={() => handleToggleTestimonial(msg.id, false)}
-                                  className="bg-yellow-100 text-yellow-700 hover:bg-yellow-200 px-4 py-2 rounded-lg font-semibold text-xs transition-colors whitespace-nowrap w-full"
+                                  disabled={loadingId === msg.id}
+                                  className="bg-yellow-100 text-yellow-700 hover:bg-yellow-200 px-4 py-2 rounded-lg font-semibold text-xs transition-colors whitespace-nowrap w-full disabled:opacity-50"
                                 >
-                                  ⏳ Pending (Publish)
+                                  {loadingId === msg.id ? 'Processing...' : '⏳ Pending (Publish)'}
                                 </button>
                               )}
                             </div>
@@ -187,10 +208,15 @@ export default function AdminDashboard({ messages, initiatives }: { messages: an
                 <h2 className="text-2xl font-bold mb-6">Add New Initiative</h2>
                 <form
                   action={async (formData) => {
-                    await createInitiativeAction(formData);
-                    setImagePreview(null);
-                    (document.getElementById('initiative-form') as HTMLFormElement)?.reset();
-                    router.refresh();
+                    setIsPublishing(true);
+                    try {
+                      await createInitiativeAction(formData);
+                      setImagePreview(null);
+                      (document.getElementById('initiative-form') as HTMLFormElement)?.reset();
+                      router.refresh();
+                    } finally {
+                      setIsPublishing(false);
+                    }
                   }}
                   id="initiative-form"
                   className="space-y-5"
@@ -239,8 +265,8 @@ export default function AdminDashboard({ messages, initiatives }: { messages: an
                     <label className="block text-sm font-semibold mb-2 text-gray-700">Description</label>
                     <textarea name="description" required rows={4} className="w-full border rounded-lg p-3 outline-none focus:border-[#6E1110] focus:ring-1 focus:ring-[#6E1110]"></textarea>
                   </div>
-                  <button type="submit" className="bg-[#6E1110] text-white font-bold py-3 px-6 rounded-lg hover:bg-[#8B2520] transition-colors w-full">
-                    Publish Initiative
+                  <button type="submit" disabled={isPublishing} className="bg-[#6E1110] text-white font-bold py-3 px-6 rounded-lg hover:bg-[#8B2520] transition-colors w-full disabled:opacity-70">
+                    {isPublishing ? 'Publishing Initiative...' : 'Publish Initiative'}
                   </button>
                 </form>
               </div>
@@ -263,13 +289,11 @@ export default function AdminDashboard({ messages, initiatives }: { messages: an
                           <h3 className="font-bold text-gray-800 text-lg truncate">{init.title}</h3>
                           <p className="text-sm text-gray-600 line-clamp-2 mt-1">{init.description}</p>
                           <button 
-                            onClick={async () => {
-                              await deleteInitiativeAction(init.id);
-                              router.refresh();
-                            }}
-                            className="text-red-500 hover:text-red-700 text-sm font-semibold mt-3"
+                            onClick={() => handleDeleteInitiative(init.id)}
+                            disabled={loadingId === init.id}
+                            className="text-red-500 hover:text-red-700 text-sm font-semibold mt-3 disabled:opacity-50"
                           >
-                            Delete
+                            {loadingId === init.id ? 'Deleting...' : 'Delete'}
                           </button>
                         </div>
                       </div>

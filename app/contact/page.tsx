@@ -52,7 +52,7 @@ export default function ContactPage() {
             <h1 className="text-[clamp(28px,4vw,44px)] font-[family-name:var(--font-plus-jakarta)] font-extrabold text-white mt-2 mb-4">
               Contact Us
             </h1>
-            <p className="text-white/78 text-[18px]">Whether you want to donate, partner, or simply know more — we&apos;re here.</p>
+            <p className="text-[#C9A84C] text-[18px]">Whether you want to donate, partner, or simply know more — we&apos;re here.</p>
           </div>
         </section>
 
