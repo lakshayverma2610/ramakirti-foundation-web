@@ -25,6 +25,7 @@ export default function Navigation({ transparent = false }: { transparent?: bool
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState<string | null>(null);
   const pathname = usePathname();
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -80,7 +81,7 @@ export default function Navigation({ transparent = false }: { transparent?: bool
           </Link>
 
           {/* Desktop links */}
-          <div className="hidden xl:flex items-center gap-0.5">
+          <div className="hidden md:flex items-center gap-0.5">
             {NAV_LINKS.map((link) => {
               if (link.dropdown) {
                 return (
@@ -142,7 +143,7 @@ export default function Navigation({ transparent = false }: { transparent?: bool
           </div>
 
           {/* CTA */}
-          <div className="hidden xl:flex items-center gap-3 ml-3">
+          <div className="hidden md:flex items-center gap-3 ml-3">
             <Link
               href="/donate"
               className="inline-flex items-center gap-2 font-bold text-[13.5px] text-white no-underline rounded-lg px-5 py-[10px] transition-all duration-300 hover:-translate-y-[2px]"
@@ -158,7 +159,7 @@ export default function Navigation({ transparent = false }: { transparent?: bool
 
           {/* Hamburger */}
           <button
-            className="xl:hidden flex flex-col gap-[5px] p-2 rounded-lg"
+            className="md:hidden flex flex-col gap-[5px] p-2 rounded-lg"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
@@ -185,7 +186,7 @@ export default function Navigation({ transparent = false }: { transparent?: bool
       {/* Mobile menu */}
       <div
         ref={menuRef}
-        className="xl:hidden fixed z-40 left-0 right-0 bg-white shadow-xl border-t-4 transition-all duration-300"
+        className="md:hidden fixed z-40 left-0 right-0 bg-white shadow-xl border-t-4 transition-all duration-300"
         style={{
           top: '72px',
           borderTopColor: '#6E1110',
@@ -198,16 +199,25 @@ export default function Navigation({ transparent = false }: { transparent?: bool
             if (link.dropdown) {
               return (
                 <div key="initiatives-mobile" className="py-2">
-                  <div className="font-semibold text-base px-3 text-[#374151] mb-2">{link.label}</div>
-                  {link.dropdown.map((subItem) => (
-                    <Link
-                      key={subItem.href}
-                      href={subItem.href}
-                      className="block font-medium text-[14.5px] py-2.5 px-6 rounded-lg no-underline transition-colors text-gray-600 hover:bg-gray-50 hover:text-[#6E1110]"
-                    >
-                      {subItem.label}
-                    </Link>
-                  ))}
+                  <button 
+                    onClick={() => setMobileDropdownOpen(mobileDropdownOpen === link.label ? null : link.label)}
+                    className="w-full text-left font-semibold text-sm px-3 text-[#374151] mb-2 flex justify-between items-center"
+                  >
+                    {link.label}
+                  </button>
+                  {mobileDropdownOpen === link.label && (
+                    <div className="flex flex-col gap-1 pl-4">
+                      {link.dropdown.map((subItem) => (
+                        <Link
+                          key={subItem.href}
+                          href={subItem.href}
+                          className="block font-medium text-sm py-2 px-3 rounded-lg no-underline transition-colors text-gray-600 hover:bg-gray-50 hover:text-[#6E1110]"
+                        >
+                          {subItem.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                   <div className="border-b border-gray-100 mt-2"></div>
                 </div>
               );

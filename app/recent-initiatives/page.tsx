@@ -47,7 +47,7 @@ function getInitiatives() {
           ? `/img/Initiatives/${encodeURIComponent(item)}/${encodeURIComponent(directFiles[0])}`
           : null;
 
-      result.push({ name: item, slug: encodeURIComponent(item), coverImage, galleryCount });
+      result.push({ name: item, slug: item, coverImage, galleryCount });
     }
   } catch (e) {
     console.error('Error reading initiatives:', e);
@@ -55,8 +55,25 @@ function getInitiatives() {
   return result;
 }
 
-export default function RecentInitiativesPage() {
-  const initiatives = getInitiatives();
+import { db } from '@/lib/db';
+
+export default async function RecentInitiativesPage() {
+  const fileInitiatives = getInitiatives();
+  
+  const dbInitiatives = await db.initiative.findMany({
+    orderBy: { created_at: 'desc' }
+  });
+
+  const allInitiatives = [
+    ...dbInitiatives.map(i => ({
+      name: i.title,
+      slug: `custom-${i.id}`,
+      coverImage: i.image_url,
+      galleryCount: 0,
+      description: i.description
+    })),
+    ...fileInitiatives
+  ];
 
   return (
     <>
@@ -109,19 +126,19 @@ export default function RecentInitiativesPage() {
           <div className="max-w-[1280px] mx-auto px-5">
             <div className="text-center mb-12">
               <p className="text-gray-500 text-lg">
-                {initiatives.length} initiatives documented · Click any card to explore photos and stories
+                {allInitiatives.length} initiatives documented · Click any card to explore photos and stories
               </p>
             </div>
-            {initiatives.length === 0 ? (
+            {allInitiatives.length === 0 ? (
               <div className="text-center py-20 text-gray-400">
-                <p>No initiatives found. Please copy your <code>assets/img/</code> folder into <code>public/img/</code>.</p>
+                <p>No initiatives found.</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                {initiatives.map((initiative) => (
+                {allInitiatives.map((initiative) => (
                   <Link
                     key={initiative.slug}
-                    href={`/recent-initiatives/${initiative.slug}`}
+                    href={`/recent-initiatives/${encodeURIComponent(initiative.slug)}`}
                     className="initiative-card group bg-white rounded-2xl overflow-hidden border border-gray-100 no-underline block"
                     style={{ boxShadow: '0 2px 12px rgba(110,17,16,.06)' }}
                   >
@@ -165,6 +182,9 @@ export default function RecentInitiativesPage() {
                       >
                         {initiative.name}
                       </h2>
+                      {(initiative as any).description && (
+                        <p className="text-sm text-gray-600 mb-3 line-clamp-2">{(initiative as any).description}</p>
+                      )}
                       <span
                         className="inline-flex items-center gap-1 font-bold text-xs uppercase tracking-[.08em]"
                         style={{ color: '#6E1110', fontFamily: 'var(--font-plus-jakarta, sans-serif)' }}

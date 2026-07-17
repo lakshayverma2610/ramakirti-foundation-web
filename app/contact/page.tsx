@@ -99,7 +99,7 @@ export default function ContactPage() {
               </div>
 
               {/* Corporate CSR */}
-              <div className="mt-6 p-6 bg-[#FBF5E0] border border-[rgba(201,168,76,.3)] rounded-2xl">
+              <div className="mt-6 p-6 bg-[#F9FAFB] border border-gray-200 rounded-2xl shadow-sm">
                 <h3 className="font-[family-name:var(--font-plus-jakarta)] font-bold text-[18px] text-[#651A16] mb-2">🏢 Corporate CSR / Partnerships</h3>
                 <p className="text-gray-600 text-sm">
                   Looking to fulfill your CSR mandate or partner with a transparent NGO? We offer employee volunteering, brand placement, and impact reporting. Email us at{' '}

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { FaFacebook, FaInstagram, FaLinkedin, FaYoutube, FaWhatsapp } from 'react-icons/fa';
 
 const QUICK_LINKS = [
   { href: '/about', label: 'About Us' },
@@ -42,16 +43,16 @@ export default function Footer() {
             {/* Socials */}
             <div className="flex gap-2 mt-6" aria-label="Social media links">
               {[
-                { href: 'https://www.facebook.com/ramakirtifoundation.org', label: 'Facebook', icon: 'f' },
-                { href: 'https://www.instagram.com/ramakirtifoundation/', label: 'Instagram', icon: 'IG' },
-                { href: 'https://www.linkedin.com/company/96037665/', label: 'LinkedIn', icon: 'in' },
-                { href: 'https://www.youtube.com/channel/UCY9gGWwrWTdLH6mxEDo6LFA', label: 'YouTube', icon: '▶' },
-                { href: 'https://wa.me/918851502840', label: 'WhatsApp', icon: '💬' },
+                { href: 'https://www.facebook.com/ramakirtifoundation.org', label: 'Facebook', icon: <FaFacebook size={24} /> },
+                { href: 'https://www.instagram.com/ramakirtifoundation/', label: 'Instagram', icon: <FaInstagram size={24} /> },
+                { href: 'https://www.linkedin.com/company/96037665/', label: 'LinkedIn', icon: <FaLinkedin size={24} /> },
+                { href: 'https://www.youtube.com/channel/UCY9gGWwrWTdLH6mxEDo6LFA', label: 'YouTube', icon: <FaYoutube size={24} /> },
+                { href: 'https://wa.me/918851502840', label: 'WhatsApp', icon: <FaWhatsapp size={24} /> },
               ].map(({ href, label, icon }) => (
                 <a
                   key={label}
                   href={href}
-                  className="w-[38px] h-[38px] rounded-full bg-white/10 flex items-center justify-center text-sm text-white hover:bg-[#8B2520] hover:-translate-y-[3px] transition-all duration-200 no-underline"
+                  className="w-[38px] h-[38px] rounded-full bg-white/10 flex items-center justify-center text-white hover:text-gray-300 hover:bg-[#8B2520] hover:-translate-y-[3px] transition-all duration-200 no-underline"
                   aria-label={label}
                   target="_blank"
                   rel="noopener noreferrer"

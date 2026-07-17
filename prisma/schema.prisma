@@ -39,3 +39,26 @@ model Volunteer {
 
   @@map("volunteers")
 }
+
+model ContactMessage {
+  id             String   @id @default(uuid())
+  name           String
+  email          String
+  phone          String?
+  subject        String?
+  message        String
+  is_testimonial Boolean  @default(false)
+  created_at     DateTime @default(now())
+
+  @@map("contact_messages")
+}
+
+model Initiative {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  image_url   String
+  created_at  DateTime @default(now())
+
+  @@map("initiatives")
+}

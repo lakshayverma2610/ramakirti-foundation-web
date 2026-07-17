@@ -121,7 +121,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={`${roboto.className} antialiased`}>
+      <body className={`${roboto.className} antialiased text-[17px]`}>
         {children}
         {/* Razorpay checkout.js — loaded once site-wide */}
         <Script

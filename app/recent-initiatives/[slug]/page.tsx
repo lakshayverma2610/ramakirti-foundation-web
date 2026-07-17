@@ -79,57 +79,86 @@ export async function generateStaticParams() {
     return fs
       .readdirSync(initiativesDir)
       .filter((item) => fs.statSync(path.join(initiativesDir, item)).isDirectory())
-      .map((item) => ({ slug: encodeURIComponent(item) }));
+      .map((item) => ({ slug: item }));
   } catch { return []; }
 }
 
 export async function generateMetadata({ params }: PageProps) {
-  const name = decodeURIComponent(params.slug);
+  const slug = params.slug;
+  const name = slug;
+  let displayName = name;
+  let description = getDescription(name).slice(0, 120);
+
+  if (slug.startsWith('custom-')) {
+    const id = slug.replace('custom-', '');
+    const { db } = await import('@/lib/db');
+    const initiative = await db.initiative.findUnique({ where: { id } });
+    if (initiative) {
+      displayName = initiative.title;
+      description = initiative.description.slice(0, 120);
+    }
+  }
+
   return {
-    title: `${name} | Ramakirti Foundation`,
-    description: `Photos and story from ${name} — a Ramakirti Foundation community initiative in Gurgaon. ${getDescription(name).slice(0, 120)}`,
+    title: `${displayName} | Ramakirti Foundation`,
+    description: `Photos and story from ${displayName} — a Ramakirti Foundation community initiative in Gurgaon. ${description}`,
     openGraph: {
-      title: `${name} | Ramakirti Foundation`,
+      title: `${displayName} | Ramakirti Foundation`,
       type: 'website',
       url: `https://ramakirtifoundation.co.in/recent-initiatives/${params.slug}`,
     },
   };
 }
 
-export default function InitiativeDetailPage({ params }: PageProps) {
+import { db } from '@/lib/db';
+
+export default async function InitiativeDetailPage({ params }: PageProps) {
   const slug = params.slug;
-  const name = decodeURIComponent(slug);
-  const initiativesDir = path.join(process.cwd(), 'public', 'img', 'Initiatives');
-  const itemPath = path.join(initiativesDir, name);
-  if (!fs.existsSync(itemPath)) notFound();
+  const name = slug;
+  
+  let coverImage = null;
+  let galleryImages: string[] = [];
+  let description = '';
+  let collaborator = null;
+  let displayName = name;
 
-  // Cover
-  const directFiles = fs
-    .readdirSync(itemPath)
-    .filter(
-      (f) =>
-        f.match(/\.(jpg|jpeg|png|webp|gif)$/i) &&
-        !fs.statSync(path.join(itemPath, f)).isDirectory()
-    );
-  const coverImage =
-    directFiles.length > 0
-      ? `/img/Initiatives/${slug}/${encodeURIComponent(directFiles[0])}`
-      : null;
+  if (slug.startsWith('custom-')) {
+    const id = slug.replace('custom-', '');
+    const initiative = await db.initiative.findUnique({ where: { id } });
+    if (!initiative) notFound();
+    
+    displayName = initiative.title;
+    coverImage = initiative.image_url;
+    description = initiative.description;
+  } else {
+    const initiativesDir = path.join(process.cwd(), 'public', 'img', 'Initiatives');
+    const itemPath = path.join(initiativesDir, name);
+    if (!fs.existsSync(itemPath)) notFound();
 
-  // Gallery
-  const galleryPath = path.join(itemPath, 'Gallery');
-  const galleryImages: string[] = [];
-  if (fs.existsSync(galleryPath)) {
-    fs.readdirSync(galleryPath)
-      .filter((f) => f.match(/\.(jpg|jpeg|png|webp|gif)$/i))
-      .forEach((f) =>
-        galleryImages.push(`/img/Initiatives/${slug}/Gallery/${encodeURIComponent(f)}`)
+    const directFiles = fs
+      .readdirSync(itemPath)
+      .filter(
+        (f) =>
+          f.match(/\.(jpg|jpeg|png|webp|gif)$/i) &&
+          !fs.statSync(path.join(itemPath, f)).isDirectory()
       );
+    coverImage =
+      directFiles.length > 0
+        ? `/img/Initiatives/${encodeURIComponent(slug)}/${encodeURIComponent(directFiles[0])}`
+        : null;
+
+    const galleryPath = path.join(itemPath, 'Gallery');
+    if (fs.existsSync(galleryPath)) {
+      fs.readdirSync(galleryPath)
+        .filter((f) => f.match(/\.(jpg|jpeg|png|webp|gif)$/i))
+        .forEach((f) =>
+          galleryImages.push(`/img/Initiatives/${encodeURIComponent(slug)}/Gallery/${encodeURIComponent(f)}`)
+        );
+    }
+    
+    description = getDescription(name);
+    collaborator = getCollaborator(name);
   }
-
-  const description = getDescription(name);
-  const collaborator = getCollaborator(name);
-
   return (
     <>
       <Navigation />
@@ -143,7 +172,7 @@ export default function InitiativeDetailPage({ params }: PageProps) {
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={coverImage}
-              alt={name}
+              alt={displayName}
               className="absolute inset-0 w-full h-full object-cover"
             />
           ) : (
@@ -162,13 +191,13 @@ export default function InitiativeDetailPage({ params }: PageProps) {
               <span>›</span>
               <Link href="/recent-initiatives" style={{ color: 'rgba(255,255,255,.6)' }} className="hover:text-white transition-colors">Initiatives</Link>
               <span>›</span>
-              <span className="text-white">{name}</span>
+              <span className="text-white">{displayName}</span>
             </nav>
             <h1
               className="font-extrabold text-white mb-4"
               style={{ fontSize: 'clamp(26px,4vw,52px)', fontFamily: 'var(--font-plus-jakarta, sans-serif)' }}
             >
-              {name}
+              {displayName}
             </h1>
             <div className="flex flex-wrap gap-3">
               {galleryImages.length > 0 && (
@@ -276,7 +305,7 @@ export default function InitiativeDetailPage({ params }: PageProps) {
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={imgSrc}
-                      alt={`${name} — photo ${idx + 1}`}
+                      alt={`${displayName} — photo ${idx + 1}`}
                       className="gallery-img w-full h-full object-cover"
                       loading="lazy"
                     />
@@ -291,8 +320,6 @@ export default function InitiativeDetailPage({ params }: PageProps) {
         )}
       </main>
       <Footer />
-
-
     </>
   );
 }

@@ -35,6 +35,12 @@ export async function POST(req: NextRequest) {
 
     await transporter.sendMail(adminMailOptions);
 
+    // Save to database
+    const prisma = require('@/lib/db').db || new (require('@prisma/client').PrismaClient)();
+    await prisma.contactMessage.create({
+      data: { name, email, phone, subject, message },
+    });
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Contact form submission error:', error);

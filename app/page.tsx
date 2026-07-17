@@ -16,7 +16,21 @@ export const metadata: Metadata = {
   },
 };
 
-const TESTIMONIALS = [
+import { db } from '@/lib/db';
+
+export default async function HomePage() {
+  const dynamicTestimonials = await db.contactMessage.findMany({
+    where: { is_testimonial: true },
+    orderBy: { created_at: 'desc' },
+  });
+
+  const allTestimonials = dynamicTestimonials.length > 0 ? dynamicTestimonials.map(msg => ({
+    stars: 5,
+    quote: msg.message,
+    name: msg.name,
+    role: 'Well Wisher',
+    initials: msg.name.substring(0, 2).toUpperCase()
+  })) : [
   {
     stars: 5,
     quote: '"My daughter used to sell vegetables by the road. After 8 months at Ramakirti Foundation\'s education centre, she can read, write, and dream of becoming a nurse."',
@@ -37,10 +51,8 @@ const TESTIMONIALS = [
     name: 'Sunita Maurya',
     role: 'Women Empowerment Graduate',
     initials: 'SM',
-  },
-];
-
-export default function HomePage() {
+  }
+  ];
   return (
     <>
       <Navigation transparent />
@@ -101,7 +113,7 @@ export default function HomePage() {
         </section>
 
         {/* ─── STATS STRIP ─── */}
-        <div className="bg-[#FBF5E0] py-4 border-y-2 border-[#E5C96A]/30">
+        <div className="bg-[#F9FAFB] py-4 border-y-2 border-[#E5C96A]/30">
           <div className="max-w-[1280px] mx-auto px-5 flex gap-8 md:gap-12 justify-center items-center flex-wrap">
             {[
               { icon: '🗓', text: 'Founded 2021' },
@@ -192,7 +204,7 @@ export default function HomePage() {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {TESTIMONIALS.map(({ stars, quote, name, role, initials }) => (
+              {allTestimonials.map(({ stars, quote, name, role, initials }) => (
                 <div
                   key={name}
                   className="testimonial-card p-8 rounded-[24px] bg-gradient-to-br from-white to-[#fdf4f4] border border-[#6E1110]/10 relative"
@@ -209,7 +221,7 @@ export default function HomePage() {
                     <div>
                       <div className="font-[family-name:var(--font-plus-jakarta)] font-bold text-[15px] text-[#6E1110] mb-0.5">{name}</div>
                       <div className="text-[13px] text-gray-500 font-medium">
-                        {role} <span className="ml-1 inline-flex items-center bg-[#FBF5E0] text-[#6E1110] px-2 py-0.5 rounded-full text-[10px] font-bold">✓ Verified</span>
+                        {role} <span className="ml-1 inline-flex items-center bg-[#F9FAFB] text-[#6E1110] px-2 py-0.5 rounded-full text-[10px] font-bold shadow-sm">✓ Verified</span>
                       </div>
                     </div>
                   </div>
