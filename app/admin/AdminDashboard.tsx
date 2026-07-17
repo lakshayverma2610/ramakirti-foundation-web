@@ -60,27 +60,38 @@ export default function AdminDashboard({ messages, initiatives }: { messages: an
                         <tr key={msg.id} className="border-b last:border-0 hover:bg-gray-50 transition-colors">
                           <td className="p-4 align-top">
                             <div className="font-bold text-gray-800">{msg.name}</div>
-                            <div className="text-xs text-gray-500">{msg.email}</div>
+                            <div className="text-xs text-gray-500 mb-1">{msg.email}</div>
+                            {msg.phone && <div className="text-xs text-gray-500">Phone: {msg.phone}</div>}
                           </td>
                           <td className="p-4 align-top">
                             <p className="text-gray-700 whitespace-pre-wrap">{msg.message}</p>
                           </td>
-                          <td className="p-4 align-top text-right">
-                            {msg.is_testimonial ? (
-                              <button 
-                                onClick={() => handleToggleTestimonial(msg.id, msg.is_testimonial)}
-                                className="bg-green-100 text-green-700 hover:bg-green-200 px-4 py-2 rounded-lg font-semibold text-xs transition-colors whitespace-nowrap"
+                          <td className="p-4 align-top text-right space-y-2">
+                            <div>
+                              <a 
+                                href={`mailto:${msg.email}?subject=Re: Your message to Ramakirti Foundation`}
+                                className="inline-block bg-blue-100 text-blue-700 hover:bg-blue-200 px-4 py-2 rounded-lg font-semibold text-xs transition-colors whitespace-nowrap w-full text-center"
                               >
-                                ✓ Testimonial Added
-                              </button>
-                            ) : (
-                              <button 
-                                onClick={() => handleToggleTestimonial(msg.id, msg.is_testimonial)}
-                                className="bg-gray-100 text-gray-600 hover:bg-gray-200 px-4 py-2 rounded-lg font-semibold text-xs transition-colors whitespace-nowrap"
-                              >
-                                + Convert to Testimonial
-                              </button>
-                            )}
+                                ✉️ Reply to User
+                              </a>
+                            </div>
+                            <div>
+                              {msg.is_testimonial ? (
+                                <button 
+                                  onClick={() => handleToggleTestimonial(msg.id, msg.is_testimonial)}
+                                  className="bg-green-100 text-green-700 hover:bg-green-200 px-4 py-2 rounded-lg font-semibold text-xs transition-colors whitespace-nowrap w-full"
+                                >
+                                  ✓ Testimonial Added
+                                </button>
+                              ) : (
+                                <button 
+                                  onClick={() => handleToggleTestimonial(msg.id, msg.is_testimonial)}
+                                  className="bg-gray-100 text-gray-600 hover:bg-gray-200 px-4 py-2 rounded-lg font-semibold text-xs transition-colors whitespace-nowrap w-full"
+                                >
+                                  + Convert to Testimonial
+                                </button>
+                              )}
+                            </div>
                           </td>
                         </tr>
                       ))}
@@ -109,27 +120,42 @@ export default function AdminDashboard({ messages, initiatives }: { messages: an
                         <tr key={msg.id} className="border-b last:border-0 hover:bg-gray-50 transition-colors">
                           <td className="p-4 align-top">
                             <div className="font-bold text-gray-800">{msg.name}</div>
-                            <div className="text-xs text-gray-500">{msg.subject?.replace('[Testimonial Submission] ', '') || 'Well Wisher'}</div>
+                            <div className="text-xs text-gray-500 mb-1">{msg.subject?.replace('[Testimonial Submission] ', '') || 'Well Wisher'}</div>
+                            {msg.email && msg.email !== 'testimonial@ramakirtifoundation.co.in' && (
+                              <div className="text-xs text-gray-400">{msg.email}</div>
+                            )}
                           </td>
                           <td className="p-4 align-top">
                             <p className="text-gray-700 italic">"{msg.message}"</p>
                           </td>
-                          <td className="p-4 align-top text-right">
-                            {msg.is_testimonial ? (
-                              <button 
-                                onClick={() => handleToggleTestimonial(msg.id, true)}
-                                className="bg-green-100 text-green-700 hover:bg-green-200 px-4 py-2 rounded-lg font-semibold text-xs transition-colors whitespace-nowrap"
-                              >
-                                ✓ Published (Click to Hide)
-                              </button>
-                            ) : (
-                              <button 
-                                onClick={() => handleToggleTestimonial(msg.id, false)}
-                                className="bg-yellow-100 text-yellow-700 hover:bg-yellow-200 px-4 py-2 rounded-lg font-semibold text-xs transition-colors whitespace-nowrap"
-                              >
-                                ⏳ Pending (Click to Publish)
-                              </button>
+                          <td className="p-4 align-top text-right space-y-2">
+                            {msg.email && msg.email !== 'testimonial@ramakirtifoundation.co.in' && (
+                              <div>
+                                <a 
+                                  href={`mailto:${msg.email}?subject=Re: Your testimonial for Ramakirti Foundation`}
+                                  className="inline-block bg-blue-100 text-blue-700 hover:bg-blue-200 px-4 py-2 rounded-lg font-semibold text-xs transition-colors whitespace-nowrap w-full text-center"
+                                >
+                                  ✉️ Reply to User
+                                </a>
+                              </div>
                             )}
+                            <div>
+                              {msg.is_testimonial ? (
+                                <button 
+                                  onClick={() => handleToggleTestimonial(msg.id, true)}
+                                  className="bg-green-100 text-green-700 hover:bg-green-200 px-4 py-2 rounded-lg font-semibold text-xs transition-colors whitespace-nowrap w-full"
+                                >
+                                  ✓ Published (Hide)
+                                </button>
+                              ) : (
+                                <button 
+                                  onClick={() => handleToggleTestimonial(msg.id, false)}
+                                  className="bg-yellow-100 text-yellow-700 hover:bg-yellow-200 px-4 py-2 rounded-lg font-semibold text-xs transition-colors whitespace-nowrap w-full"
+                                >
+                                  ⏳ Pending (Publish)
+                                </button>
+                              )}
+                            </div>
                           </td>
                         </tr>
                       ))}

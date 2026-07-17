@@ -28,9 +28,9 @@ export default async function HomePage() {
   const allTestimonials = dynamicTestimonials.map(msg => ({
     stars: 5,
     quote: msg.message,
-    name: msg.name,
+    name: msg.name || 'Anonymous',
     role: msg.subject?.replace('[Testimonial Submission] ', '') || 'Well Wisher',
-    initials: msg.name.substring(0, 2).toUpperCase()
+    initials: (msg.name || 'AN').substring(0, 2).toUpperCase()
   }));
   return (
     <>
