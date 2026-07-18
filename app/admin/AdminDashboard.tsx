@@ -1,10 +1,22 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { logoutAction, makeTestimonialAction, removeTestimonialAction, createInitiativeAction, deleteInitiativeAction, sendReplyAction, createRequirementAction, updateRequirementAction, deleteRequirementAction, updateVolunteerStatusAction, deleteMessageAction, deleteTestimonialAction, deleteVolunteerAction } from './actions';
 import { useRouter } from 'next/navigation';
 
 export default function AdminDashboard({ messages, initiatives, requirements, volunteers }: { messages: any[], initiatives: any[], requirements: any[], volunteers: any[] }) {
+  const [localMessages, setLocalMessages] = useState(messages);
+  const [localInitiatives, setLocalInitiatives] = useState(initiatives);
+  const [localRequirements, setLocalRequirements] = useState(requirements);
+  const [localVolunteers, setLocalVolunteers] = useState(volunteers);
+
+  useEffect(() => {
+    setLocalMessages(messages);
+    setLocalInitiatives(initiatives);
+    setLocalRequirements(requirements);
+    setLocalVolunteers(volunteers);
+  }, [messages, initiatives, requirements, volunteers]);
+
   const [activeTab, setActiveTab] = useState<'messages' | 'testimonials' | 'initiatives' | 'requirements' | 'volunteers'>('messages');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [replyModal, setReplyModal] = useState<{ isOpen: boolean, email: string, name: string, subject: string, status: 'idle' | 'sending' | 'success' | 'error' }>({
@@ -19,8 +31,10 @@ export default function AdminDashboard({ messages, initiatives, requirements, vo
     try {
       if (currentStatus) {
         await removeTestimonialAction(id);
+        setLocalMessages(prev => prev.map(m => m.id === id ? { ...m, is_testimonial: false } : m));
       } else {
         await makeTestimonialAction(id);
+        setLocalMessages(prev => prev.map(m => m.id === id ? { ...m, is_testimonial: true } : m));
       }
       router.refresh();
     } finally {
@@ -32,6 +46,7 @@ export default function AdminDashboard({ messages, initiatives, requirements, vo
     setLoadingId(id);
     try {
       await deleteInitiativeAction(id);
+      setLocalInitiatives(prev => prev.filter(i => i.id !== id));
       router.refresh();
     } finally {
       setLoadingId(null);
@@ -42,6 +57,7 @@ export default function AdminDashboard({ messages, initiatives, requirements, vo
     setLoadingId(`req-${id}`);
     try {
       await updateRequirementAction(id, fulfilledQuantity);
+      setLocalRequirements(prev => prev.map(r => r.id === id ? { ...r, fulfilledQuantity } : r));
       router.refresh();
     } finally {
       setLoadingId(null);
@@ -52,6 +68,7 @@ export default function AdminDashboard({ messages, initiatives, requirements, vo
     setLoadingId(`del-req-${id}`);
     try {
       await deleteRequirementAction(id);
+      setLocalRequirements(prev => prev.filter(r => r.id !== id));
       router.refresh();
     } finally {
       setLoadingId(null);
@@ -62,6 +79,7 @@ export default function AdminDashboard({ messages, initiatives, requirements, vo
     setLoadingId(`vol-${id}`);
     try {
       await updateVolunteerStatusAction(id, status);
+      setLocalVolunteers(prev => prev.map(v => v.id === id ? { ...v, status } : v));
       router.refresh();
     } finally {
       setLoadingId(null);
@@ -72,6 +90,7 @@ export default function AdminDashboard({ messages, initiatives, requirements, vo
     setLoadingId(`del-msg-${id}`);
     try {
       await deleteMessageAction(id);
+      setLocalMessages(prev => prev.filter(m => m.id !== id));
       router.refresh();
     } finally {
       setLoadingId(null);
@@ -82,6 +101,7 @@ export default function AdminDashboard({ messages, initiatives, requirements, vo
     setLoadingId(`del-test-${id}`);
     try {
       await deleteTestimonialAction(id);
+      setLocalMessages(prev => prev.filter(m => m.id !== id));
       router.refresh();
     } finally {
       setLoadingId(null);
@@ -92,6 +112,7 @@ export default function AdminDashboard({ messages, initiatives, requirements, vo
     setLoadingId(`del-vol-${id}`);
     try {
       await deleteVolunteerAction(id);
+      setLocalVolunteers(prev => prev.filter(v => v.id !== id));
       router.refresh();
     } finally {
       setLoadingId(null);
@@ -137,7 +158,7 @@ export default function AdminDashboard({ messages, initiatives, requirements, vo
           {activeTab === 'messages' && (
             <div className="p-6">
               <h2 className="text-2xl font-bold mb-6">Contact Form Submissions</h2>
-              {messages.filter(m => !m.is_testimonial && !(m.subject || '').startsWith('[Testimonial Submission]') && m.email !== 'testimonial@ramakirtifoundation.co.in').length === 0 ? <p className="text-gray-500">No contact messages yet.</p> : (
+              {localMessages.filter(m => !m.is_testimonial && !(m.subject || '').startsWith('[Testimonial Submission]') && m.email !== 'testimonial@ramakirtifoundation.co.in').length === 0 ? <p className="text-gray-500">No contact messages yet.</p> : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-sm border-collapse">
                     <thead>
@@ -148,7 +169,7 @@ export default function AdminDashboard({ messages, initiatives, requirements, vo
                       </tr>
                     </thead>
                     <tbody>
-                      {messages.filter(m => !m.is_testimonial && !(m.subject || '').startsWith('[Testimonial Submission]') && m.email !== 'testimonial@ramakirtifoundation.co.in').map(msg => (
+                      {localMessages.filter(m => !m.is_testimonial && !(m.subject || '').startsWith('[Testimonial Submission]') && m.email !== 'testimonial@ramakirtifoundation.co.in').map(msg => (
                         <tr key={msg.id} className="border-b last:border-0 hover:bg-gray-50 transition-colors">
                           <td className="p-4 align-top">
                             <div className="font-bold text-gray-800">{msg.name}</div>
@@ -214,7 +235,7 @@ export default function AdminDashboard({ messages, initiatives, requirements, vo
           {activeTab === 'testimonials' && (
             <div className="p-6">
               <h2 className="text-2xl font-bold mb-6">Manage Testimonials</h2>
-              {messages.filter(m => m.is_testimonial || (m.subject || '').startsWith('[Testimonial Submission]') || m.email === 'testimonial@ramakirtifoundation.co.in').length === 0 ? <p className="text-gray-500">No testimonials to manage.</p> : (
+              {localMessages.filter(m => m.is_testimonial || (m.subject || '').startsWith('[Testimonial Submission]') || m.email === 'testimonial@ramakirtifoundation.co.in').length === 0 ? <p className="text-gray-500">No testimonials to manage.</p> : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-sm border-collapse">
                     <thead>
@@ -225,7 +246,7 @@ export default function AdminDashboard({ messages, initiatives, requirements, vo
                       </tr>
                     </thead>
                     <tbody>
-                      {messages.filter(m => m.is_testimonial || (m.subject || '').startsWith('[Testimonial Submission]') || m.email === 'testimonial@ramakirtifoundation.co.in').map(msg => (
+                      {localMessages.filter(m => m.is_testimonial || (m.subject || '').startsWith('[Testimonial Submission]') || m.email === 'testimonial@ramakirtifoundation.co.in').map(msg => (
                         <tr key={msg.id} className="border-b last:border-0 hover:bg-gray-50 transition-colors">
                           <td className="p-4 align-top">
                             <div className="font-bold text-gray-800">{msg.name}</div>
@@ -365,9 +386,9 @@ export default function AdminDashboard({ messages, initiatives, requirements, vo
 
               <div>
                 <h2 className="text-2xl font-bold mb-6">Current Initiatives</h2>
-                {initiatives.length === 0 ? <p className="text-gray-500">No initiatives added yet.</p> : (
+                {localInitiatives.length === 0 ? <p className="text-gray-500">No initiatives added yet.</p> : (
                   <div className="space-y-4">
-                    {initiatives.map(init => (
+                    {localInitiatives.map(init => (
                       <div key={init.id} className="flex gap-4 p-4 border rounded-xl hover:shadow-md transition-shadow bg-gray-50">
                         {init.image_url && (
                           <img 
@@ -432,9 +453,9 @@ export default function AdminDashboard({ messages, initiatives, requirements, vo
 
               <div>
                 <h2 className="text-2xl font-bold mb-6">Current Requirements</h2>
-                {requirements.length === 0 ? <p className="text-gray-500">No requirements added yet.</p> : (
+                {localRequirements.length === 0 ? <p className="text-gray-500">No requirements added yet.</p> : (
                   <div className="space-y-4">
-                    {requirements.map(req => (
+                    {localRequirements.map(req => (
                       <div key={req.id} className="flex flex-col gap-2 p-4 border rounded-xl hover:shadow-md transition-shadow bg-gray-50">
                         <div className="flex justify-between items-start">
                           <h3 className="font-bold text-gray-800 text-lg">{req.itemName}</h3>
@@ -475,7 +496,7 @@ export default function AdminDashboard({ messages, initiatives, requirements, vo
           {activeTab === 'volunteers' && (
             <div className="p-6">
               <h2 className="text-2xl font-bold mb-6">Volunteer Submissions</h2>
-              {volunteers.length === 0 ? <p className="text-gray-500">No volunteer applications yet.</p> : (
+              {localVolunteers.length === 0 ? <p className="text-gray-500">No volunteer applications yet.</p> : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-sm border-collapse">
                     <thead>
@@ -486,7 +507,7 @@ export default function AdminDashboard({ messages, initiatives, requirements, vo
                       </tr>
                     </thead>
                     <tbody>
-                      {volunteers.map(vol => (
+                      {localVolunteers.map(vol => (
                         <tr key={vol.id} className="border-b last:border-0 hover:bg-gray-50 transition-colors">
                           <td className="p-4 align-top">
                             <div className="font-bold text-gray-800 text-base">{vol.name}</div>
