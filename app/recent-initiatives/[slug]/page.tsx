@@ -132,7 +132,7 @@ export default async function InitiativeDetailPage({ params }: PageProps) {
                   className="text-sm font-bold px-4 py-1.5 rounded-full"
                   style={{ background: 'rgba(255,255,255,.18)', color: '#fff', fontFamily: 'var(--font-plus-jakarta, sans-serif)' }}
                 >
-                  🤝 {collaborator.name}
+                  {collaborator.name}
                 </span>
               )}
             </div>

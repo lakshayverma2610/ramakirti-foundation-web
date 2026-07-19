@@ -52,7 +52,7 @@ export default async function HomePage() {
           />
           <div className="absolute inset-0 bg-gradient-to-br from-[rgba(110,17,16,.82)] via-[rgba(110,17,16,.55)] to-[rgba(201,168,76,.18)]" />
           <div className="relative z-10 text-center text-white px-6 max-w-[940px] mx-auto py-24 w-full mt-12">
-            <h1 className="text-[clamp(34px,5vw,56px)] font-[family-name:var(--font-plus-jakarta)] font-extrabold leading-[1.13] mb-6 text-white text-shadow-lg drop-shadow-xl uppercase">
+            <h1 className="text-[clamp(34px,5vw,56px)] font-[family-name:var(--font-plus-jakarta)] font-extrabold leading-[1.13] mb-6 text-white text-shadow-lg drop-uppercase">
               Ramakirti Foundation
             </h1>
             <p className="text-[20px] text-white/90 mb-10 max-w-[640px] mx-auto leading-[1.65] drop-shadow-md">
@@ -61,7 +61,7 @@ export default async function HomePage() {
             <div className="flex gap-4 justify-center flex-wrap">
               <Link
                 href="/donate"
-                className="hero-btn-primary inline-flex items-center justify-center font-[family-name:var(--font-plus-jakarta)] font-bold text-[18px] text-white px-9 py-[18px] rounded-2xl shadow-xl no-underline bg-[#651A16] hover:bg-[#8B2520] transition-colors"
+                className="hero-btn-primary inline-flex items-center justify-center font-[family-name:var(--font-plus-jakarta)] font-bold text-[18px] text-white px-9 py-[18px] rounded-2xl no-underline bg-[#651A16] hover:bg-[#8B2520] transition-colors"
               >
                 Donate Now
               </Link>
@@ -69,7 +69,7 @@ export default async function HomePage() {
                 href="/volunteer"
                 className="hero-btn-secondary inline-flex items-center justify-center font-[family-name:var(--font-plus-jakarta)] font-bold text-[18px] text-white px-9 py-[18px] rounded-2xl border-2 border-white/20 bg-black/40 hover:bg-black/60 transition-colors no-underline"
               >
-                🤝 Volunteer With Us
+                Volunteer With Us
               </Link>
             </div>
 
@@ -233,7 +233,7 @@ export default async function HomePage() {
             <div className="flex gap-4 justify-center flex-wrap">
               <Link
                 href="/donate"
-                className="hero-btn-emerald inline-flex items-center justify-center font-[family-name:var(--font-plus-jakarta)] font-bold text-[18px] text-white px-10 py-[18px] rounded-2xl shadow-xl no-underline bg-[#651A16] hover:bg-[#8B2520] transition-colors"
+                className="hero-btn-emerald inline-flex items-center justify-center font-[family-name:var(--font-plus-jakarta)] font-bold text-[18px] text-white px-10 py-[18px] rounded-2xl no-underline bg-[#651A16] hover:bg-[#8B2520] transition-colors"
               >
                 Donate Now
               </Link>
@@ -241,7 +241,7 @@ export default async function HomePage() {
                 href="/volunteer"
                 className="hero-btn-secondary inline-flex items-center justify-center font-[family-name:var(--font-plus-jakarta)] font-bold text-[18px] text-[#6E1110] px-10 py-[18px] rounded-2xl bg-white hover:bg-gray-50 transition-colors no-underline"
               >
-                🤝 Volunteer
+                Volunteer
               </Link>
             </div>
           </div>

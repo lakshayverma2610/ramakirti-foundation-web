@@ -144,7 +144,7 @@ export default function Navigation({ transparent = false }: { transparent?: bool
           <div className="hidden md:flex items-center gap-3 ml-3 h-full">
             <Link
               href="/donate"
-              className="inline-flex items-center justify-center font-bold text-sm text-white no-underline rounded-lg px-6 py-2.5 transition-all duration-300 hover:-translate-y-0.5 hover:text-white hover:bg-[#8B2520] whitespace-nowrap"
+              className="inline-flex items-center justify-center font-bold text-sm text-white no-underline rounded-lg px-6 py-2.5 transition-all duration-300 hover:text-white hover:bg-[#8B2520] whitespace-nowrap"
               style={{
                 background: '#651A16',
                 boxShadow: '0 4px 16px rgba(101,26,22,.35)',
@@ -183,7 +183,7 @@ export default function Navigation({ transparent = false }: { transparent?: bool
       {/* Mobile menu */}
       <div
         ref={menuRef}
-        className="md:hidden fixed z-40 left-0 right-0 bg-white shadow-xl border-t-4 transition-all duration-300"
+        className="md:hidden fixed z-40 left-0 right-0 bg-white border-t-4 transition-all duration-300"
         style={{
           top: '72px',
           borderTopColor: '#6E1110',

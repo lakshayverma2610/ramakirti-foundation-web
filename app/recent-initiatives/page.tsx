@@ -192,7 +192,7 @@ export default async function RecentInitiativesPage() {
                 className="inline-flex items-center gap-2 font-bold text-lg text-white no-underline rounded-lg"
                 style={{ background: 'rgba(255,255,255,.14)', border: '2px solid rgba(255,255,255,.5)', padding: '18px 36px', fontFamily: 'var(--font-plus-jakarta, sans-serif)' }}
               >
-                🤝 Volunteer With Us
+                Volunteer With Us
               </Link>
             </div>
           </div>
