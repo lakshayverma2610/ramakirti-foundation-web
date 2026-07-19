@@ -61,13 +61,13 @@ export default async function HomePage() {
             <div className="flex gap-4 justify-center flex-wrap">
               <Link
                 href="/donate"
-                className="hero-btn-primary inline-flex items-center justify-center font-[family-name:var(--font-plus-jakarta)] font-bold text-[18px] text-[#651A16] px-9 py-[18px] rounded-2xl no-underline bg-white border-2 border-white hover:bg-[#651A16] hover:text-white hover:border-[#651A16] transition-colors"
+                className="inline-flex items-center justify-center font-[family-name:var(--font-plus-jakarta)] font-bold text-[18px] text-[#651A16] px-9 py-[18px] rounded-2xl no-underline bg-white border-2 border-white hover:bg-[#651A16] hover:text-white hover:border-[#651A16] transition-colors"
               >
                 Donate Now
               </Link>
               <Link
                 href="/volunteer"
-                className="hero-btn-secondary inline-flex items-center justify-center font-[family-name:var(--font-plus-jakarta)] font-bold text-[18px] text-[#651A16] px-9 py-[18px] rounded-2xl bg-white border-2 border-white hover:bg-[#651A16] hover:text-white hover:border-[#651A16] transition-colors no-underline"
+                className="inline-flex items-center justify-center font-[family-name:var(--font-plus-jakarta)] font-bold text-[18px] text-[#651A16] px-9 py-[18px] rounded-2xl bg-white border-2 border-white hover:bg-[#651A16] hover:text-white hover:border-[#651A16] transition-colors no-underline"
               >
                 Volunteer With Us
               </Link>
@@ -233,13 +233,13 @@ export default async function HomePage() {
             <div className="flex gap-4 justify-center flex-wrap">
               <Link
                 href="/donate"
-                className="hero-btn-emerald inline-flex items-center justify-center font-[family-name:var(--font-plus-jakarta)] font-bold text-[18px] text-[#651A16] px-10 py-[18px] rounded-2xl no-underline bg-white border-2 border-white hover:bg-[#651A16] hover:text-white hover:border-[#651A16] transition-colors"
+                className="inline-flex items-center justify-center font-[family-name:var(--font-plus-jakarta)] font-bold text-[18px] text-[#651A16] px-10 py-[18px] rounded-2xl no-underline bg-white border-2 border-white hover:bg-[#651A16] hover:text-white hover:border-[#651A16] transition-colors"
               >
                 Donate Now
               </Link>
               <Link
                 href="/volunteer"
-                className="hero-btn-secondary inline-flex items-center justify-center font-[family-name:var(--font-plus-jakarta)] font-bold text-[18px] text-[#651A16] px-10 py-[18px] rounded-2xl bg-white border-2 border-white hover:bg-[#651A16] hover:text-white hover:border-[#651A16] transition-colors no-underline"
+                className="inline-flex items-center justify-center font-[family-name:var(--font-plus-jakarta)] font-bold text-[18px] text-[#651A16] px-10 py-[18px] rounded-2xl bg-white border-2 border-white hover:bg-[#651A16] hover:text-white hover:border-[#651A16] transition-colors no-underline"
               >
                 Volunteer
               </Link>
