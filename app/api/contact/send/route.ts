@@ -17,13 +17,26 @@ export async function POST(req: NextRequest) {
 
     try {
       if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD && !process.env.EMAIL_PASSWORD.includes('xxxx')) {
-        const transporter = nodemailer.createTransport({
-          service: 'gmail',
-          auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASSWORD,
-          },
-        });
+        const isGmail = process.env.EMAIL_USER?.endsWith('@gmail.com');
+        const transporter = nodemailer.createTransport(
+          isGmail 
+            ? {
+                service: 'gmail',
+                auth: {
+                  user: process.env.EMAIL_USER,
+                  pass: process.env.EMAIL_PASSWORD,
+                },
+              }
+            : {
+                host: process.env.EMAIL_HOST || 'smtp.hostinger.com',
+                port: parseInt(process.env.EMAIL_PORT || '465', 10),
+                secure: process.env.EMAIL_SECURE !== 'false',
+                auth: {
+                  user: process.env.EMAIL_USER,
+                  pass: process.env.EMAIL_PASSWORD,
+                },
+              }
+        );
 
         const adminMailOptions = {
           from: process.env.EMAIL_USER,
