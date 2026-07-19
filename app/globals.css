@@ -3,18 +3,15 @@
  * DESCRIPTION: Global styles and Tailwind directives
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
-
+/* Root variables */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Root variables */
 :root {
   /* Colors */
-  --color-primary: #651A16;
-  --color-emerald: #C9A84C;
+  --color-primary: #651A16; /* Deep Red */
+  --color-emerald: #C9A84C; /* Golden */
   --color-amber: #C9A84C;
   --color-neutral-50: #FAFBFF;
   --color-neutral-900: #1F2937;
@@ -42,7 +39,7 @@ html {
 
 /* Base elements */
 body {
-  @apply bg-neutral-50 text-neutral-800 font-sans;
+  @apply bg-white text-gray-700 font-sans;
   transition: background-color var(--transition-base);
 }
 
@@ -52,20 +49,20 @@ main {
 
 /* Links */
 a {
-  @apply text-[#6E1110] hover:text-[#C9A84C] transition-colors;
+  @apply text-[#651A16] hover:text-[#C9A84C] transition-colors;
   text-decoration-skip-ink: auto;
 }
 
 /* Headings */
 h1, h2, h3, h4, h5, h6 {
-  @apply font-heading font-bold text-neutral-900;
-  letter-spacing: -0.02em;
+  @apply font-heading font-bold text-[#651A16]; /* Standardize all headings to Primary Red */
+  letter-spacing: -0.01em;
 }
 
-h1 { @apply text-5xl md:text-6xl; }
-h2 { @apply text-4xl md:text-5xl; }
-h3 { @apply text-3xl md:text-4xl; }
-h4 { @apply text-2xl md:text-3xl; }
+h1 { @apply text-4xl md:text-5xl; }
+h2 { @apply text-3xl md:text-4xl; }
+h3 { @apply text-2xl md:text-3xl; }
+h4 { @apply text-xl md:text-2xl; }
 
 /* Utility classes */
 .container-tight {

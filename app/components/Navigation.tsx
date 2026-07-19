@@ -47,71 +47,67 @@ export default function Navigation({ transparent = false }: { transparent?: bool
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isLight
             ? 'bg-transparent'
-            : 'bg-white shadow-[0_2px_20px_rgba(110,17,16,.12)] backdrop-blur-md'
+            : 'bg-white shadow-sm backdrop-blur-md'
         }`}
-        style={{ height: '72px' }}
+        style={{ height: '64px' }}
         role="navigation"
         aria-label="Main navigation"
       >
         <div className="max-w-[1280px] mx-auto h-full flex items-center justify-between px-5">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 no-underline flex-shrink-0">
+          <Link href="/" className="flex items-center gap-3 no-underline flex-shrink-0 mr-8">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/img/logo.jpg"
               alt="Ramakirti Foundation logo"
-              width={44}
-              height={44}
-              className="rounded-lg object-cover flex-shrink-0"
-              style={{ border: '2px solid rgba(110,17,16,.18)' }}
+              width={36}
+              height={36}
+              className="rounded-lg object-cover flex-shrink-0 border border-gray-200"
             />
             <div className="flex flex-col leading-tight">
               <span
-                className="font-extrabold text-[15px] tracking-tight transition-colors duration-300"
+                className="font-bold text-[16px] tracking-tight transition-colors duration-300"
                 style={{
-                  fontFamily: 'var(--font-plus-jakarta, sans-serif)',
-                  color: isLight ? '#fff' : '#6E1110',
+                  color: isLight ? '#fff' : '#651A16',
                 }}
               >
                 Ramakirti Foundation
               </span>
-              <span className="text-[10px] font-semibold tracking-wide" style={{ color: '#C9A84C' }}>
+              <span className="text-[11px] font-medium tracking-wide" style={{ color: '#C9A84C' }}>
                 Educate. Nourish. Empower.
               </span>
             </div>
           </Link>
 
           {/* Desktop links */}
-          <div className="hidden md:flex items-center gap-0.5">
+          <div className="hidden lg:flex items-center gap-6 h-full">
             {NAV_LINKS.map((link) => {
               if (link.dropdown) {
                 return (
                   <div 
                     key="initiatives" 
-                    className="relative group"
+                    className="relative group flex items-center h-full py-2"
                     onMouseEnter={() => setDropdownOpen(true)}
                     onMouseLeave={() => setDropdownOpen(false)}
                   >
                     <button
-                      className="flex items-center gap-1 px-3 py-2 rounded-lg text-[13.5px] font-semibold transition-all duration-200 cursor-pointer"
+                      className="flex items-center text-sm font-semibold transition-colors duration-200 cursor-pointer"
                       style={{
-                        fontFamily: 'var(--font-plus-jakarta, sans-serif)',
                         color: isLight ? 'rgba(255,255,255,.9)' : '#374151',
-                        background: 'transparent',
                       }}
                     >
-                      {link.label}
+                      Initiatives <span className="text-[10px] ml-1 opacity-70">▼</span>
                     </button>
                     
                     {/* Dropdown Menu */}
                     <div 
-                      className={`absolute top-full left-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 border border-gray-100 transition-all duration-200 ${dropdownOpen ? 'opacity-100 translate-y-0 visible' : 'opacity-0 translate-y-2 invisible'}`}
+                      className={`absolute top-full left-0 w-48 bg-white rounded-xl shadow-lg py-2 border border-gray-100 transition-all duration-200 ${dropdownOpen ? 'opacity-100 translate-y-0 visible' : 'opacity-0 translate-y-2 invisible'}`}
                     >
                       {link.dropdown.map((subItem) => (
                         <Link
                           key={subItem.href}
                           href={subItem.href}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#6E1110] font-medium no-underline"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#651A16] font-medium no-underline"
                         >
                           {subItem.label}
                         </Link>
@@ -125,16 +121,15 @@ export default function Navigation({ transparent = false }: { transparent?: bool
                 <Link
                   key={link.href}
                   href={link.href!}
-                  className="no-underline px-3 py-2 rounded-lg text-[13.5px] font-semibold transition-all duration-200"
+                  className="no-underline text-sm transition-all duration-200 flex items-center h-full py-2"
                   style={{
-                    fontFamily: 'var(--font-plus-jakarta, sans-serif)',
                     color: pathname === link.href
-                      ? '#6E1110'
+                      ? '#651A16'
                       : isLight
                       ? 'rgba(255,255,255,.9)'
                       : '#374151',
-                    background: pathname === link.href ? 'rgba(110,17,16,.08)' : 'transparent',
                     fontWeight: pathname === link.href ? '800' : '600',
+                    borderBottom: pathname === link.href ? '2px solid #651A16' : '2px solid transparent',
                   }}
                 >
                   {link.label}

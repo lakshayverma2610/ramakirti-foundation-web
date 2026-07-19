@@ -70,8 +70,8 @@ const config: Config = {
 
       // Typography
       fontFamily: {
-        'sans': ['Roboto', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
-        'heading': ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+        'sans': ['var(--font-atkinson)', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
+        'heading': ['var(--font-atkinson)', 'system-ui', 'sans-serif'],
       },
 
       fontSize: {
