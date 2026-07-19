@@ -126,7 +126,7 @@ export default function AboutPage() {
               <div className="mt-12">
                 <Link
                     href="/donate"
-                    className="hero-btn-primary inline-flex items-center gap-2 font-[family-name:var(--font-plus-jakarta)] font-bold text-[16px] text-white px-8 py-4 rounded-lg shadow-md no-underline"
+                    className="inline-flex items-center justify-center font-[family-name:var(--font-plus-jakarta)] font-bold text-[18px] text-white px-9 py-[18px] rounded-2xl bg-[#651A16] hover:bg-[#8B2520] transition-colors no-underline min-w-[250px]"
                   >
                     Support Our Mission
                   </Link>

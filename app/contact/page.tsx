@@ -75,9 +75,9 @@ export default function ContactPage() {
                     <div>
                       <div className="font-[family-name:var(--font-plus-jakarta)] font-bold text-[15px] text-gray-800 mb-0.5">{title}</div>
                       {href ? (
-                        <a href={href} className="text-[#651A16] font-semibold hover:underline no-underline">{content}</a>
+                        <a href={href} className="text-[#651A16] font-bold hover:underline no-underline text-base">{content}</a>
                       ) : (
-                        <p className="text-[#651A16] font-medium text-base">{content}</p>
+                        <p className="text-[#651A16] font-bold text-base">{content}</p>
                       )}
                     </div>
                   </div>

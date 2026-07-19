@@ -121,7 +121,7 @@ export default function Navigation({ transparent = false }: { transparent?: bool
                 <Link
                   key={link.href}
                   href={link.href!}
-                  className="no-underline text-sm transition-all duration-200 flex items-center h-full py-2"
+                  className="no-underline text-sm transition-all duration-200 flex items-center h-full py-2 whitespace-nowrap text-center"
                   style={{
                     color: pathname === link.href
                       ? (isLight ? '#ffffff' : '#651A16')

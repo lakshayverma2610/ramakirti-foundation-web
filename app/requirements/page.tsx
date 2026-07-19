@@ -146,13 +146,13 @@ export default async function RequirementsPage() {
               <div className="flex gap-4 justify-center flex-wrap">
                 <Link
                   href="/contact"
-                  className="inline-flex items-center justify-center font-[family-name:var(--font-plus-jakarta)] font-bold text-[18px] text-white px-9 py-[18px] rounded-2xl no-underline bg-[#651A16] hover:bg-[#8B2520] transition-colors"
+                  className="inline-flex items-center justify-center font-[family-name:var(--font-plus-jakarta)] font-bold text-[18px] text-white px-9 py-[18px] rounded-2xl no-underline bg-[#651A16] hover:bg-[#8B2520] transition-colors flex-1 min-w-[300px]"
                 >
                   Contact Us to Schedule Drop-off
                 </Link>
                 <Link
                   href="/donate"
-                  className="inline-flex items-center justify-center font-[family-name:var(--font-plus-jakarta)] font-bold text-[18px] text-[#6E1110] px-9 py-[18px] rounded-2xl bg-white hover:bg-gray-50 transition-colors no-underline"
+                  className="inline-flex items-center justify-center font-[family-name:var(--font-plus-jakarta)] font-bold text-[18px] text-white px-9 py-[18px] rounded-2xl no-underline bg-[#651A16] hover:bg-[#8B2520] transition-colors flex-1 min-w-[300px]"
                 >
                   Prefer to Donate Funds Instead?
                 </Link>
