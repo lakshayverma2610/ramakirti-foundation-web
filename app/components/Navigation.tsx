@@ -55,7 +55,7 @@ export default function Navigation({ transparent = false }: { transparent?: bool
       >
         <div className="max-w-[1280px] mx-auto h-full flex items-center justify-between px-5">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 no-underline flex-shrink-0 mr-8">
+          <Link href="/" className="flex items-center gap-3 no-underline flex-shrink-0 mr-auto lg:mr-8">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/img/logo.jpg"
@@ -80,7 +80,7 @@ export default function Navigation({ transparent = false }: { transparent?: bool
           </Link>
 
           {/* Desktop links */}
-          <div className="hidden lg:flex items-center gap-6 h-full">
+          <div className="hidden lg:flex items-center justify-end gap-3 xl:gap-6 h-full flex-grow">
             {NAV_LINKS.map((link) => {
               if (link.dropdown) {
                 return (
