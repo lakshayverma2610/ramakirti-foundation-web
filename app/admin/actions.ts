@@ -92,26 +92,15 @@ export async function sendReplyAction(email: string, subject: string, message: s
     throw new Error('Please configure a real Email Password in your Vercel Environment Variables. The current one is just a placeholder ("xxxx").');
   }
 
-  const isGmail = process.env.EMAIL_USER?.endsWith('@gmail.com');
-  const transporter = nodemailer.createTransport(
-    isGmail 
-      ? {
-          service: 'gmail',
-          auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASSWORD,
-          },
-        }
-      : {
-          host: process.env.EMAIL_HOST || 'smtp.hostinger.com',
-          port: parseInt(process.env.EMAIL_PORT || '465', 10),
-          secure: process.env.EMAIL_SECURE !== 'false',
-          auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASSWORD,
-          },
-        }
-  );
+  const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST || 'smtp.hostinger.com',
+    port: parseInt(process.env.EMAIL_PORT || '465', 10),
+    secure: process.env.EMAIL_SECURE !== 'false',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  });
 
   const mailOptions = {
     from: `Ramakirti Foundation <${process.env.EMAIL_USER}>`,

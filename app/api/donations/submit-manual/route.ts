@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { sendReceiptEmail } from '@/lib/email';
-import { sendWhatsAppMessage } from '@/lib/whatsapp';
 
 export async function POST(req: NextRequest) {
   try {
@@ -52,17 +51,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Send WhatsApp notification if credentials exist and number is present
-    if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && donor_phone) {
-      sendWhatsAppMessage({
-        phone_number: donor_phone,
-        donor_name: donor_name,
-        amount: parseFloat(amount),
-        initiative,
-      }).catch((error) => {
-        console.error('Failed to send WhatsApp message:', error);
-      });
-    }
+
 
     return NextResponse.json({
       success: true,

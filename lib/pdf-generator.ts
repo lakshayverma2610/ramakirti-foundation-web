@@ -199,10 +199,7 @@ programs, and empowerment initiatives for women in our community.`,
  * EMAIL_USER=support@ramakirtifoundation.co.in
  * EMAIL_PASSWORD=your_app_password
  * 
- * # WhatsApp (Twilio)
- * TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxx
- * TWILIO_AUTH_TOKEN=your_auth_token
- * TWILIO_WHATSAPP_NUMBER=+1234567890
+
  * 
  * # Database
  * DATABASE_URL=postgresql://user:password@localhost:5432/ramakirti

@@ -130,8 +130,7 @@ cp .env.example .env.local
 # DATABASE_URL=postgresql://user:pass@localhost:5432/ramakirti
 # EMAIL_USER=support@ramakirtifoundation.co.in
 # EMAIL_PASSWORD=your_app_password
-# TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxx
-# TWILIO_AUTH_TOKEN=your_auth_token
+
 
 # 4. Setup database
 npx prisma db push
